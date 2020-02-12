@@ -42,15 +42,13 @@ function getData(mymap){
 			};
 
 			L.geoJson(response, {
-					onEachFeature: onEachFeature
-				}).addTo(mymap);
-			L.geoJson(response, {
+					onEachFeature: onEachFeature,
 					pointToLayer: function (feature, latlng){
-							return L.circleMarker(latlng, geojsonMarkerOptions);
-					}
-    }).addTo(mymap);
-	});
-};
+							return L.circleMarker(latlng, geojsonMarkerOptions)
+				}
+			}).addTo(mymap);
+		});
+}
 
 
 //.ready will execute the function it requires once the document has all the data it needs.
