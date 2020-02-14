@@ -4,8 +4,8 @@ var mymap;
 function createMap(){
     //create the map
     mymap = L.map('map', {
-        center: [20, 0],
-        zoom: 2
+        center: [37.0902, 95.7129],
+        zoom: 6
     });
 
     //add OSM base tilelayer
@@ -33,8 +33,8 @@ function getData(mymap){
     //load the data
     $.getJSON("data/Pop_Est_Change_US.geojson", function(response){
 		var geojsonMarkerOptions = {
-				radius: 8,
-				fillColor: "#ff7800",
+				radius: 3,
+				fillColor: "#986BF0",
 				color: "#000",
 				weight: 1,
 				opacity: 1,
