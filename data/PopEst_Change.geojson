@@ -245,7 +245,7 @@
     "type": "Feature",
     "geometry": {
        "type": "Point",
-       "coordinates":  [ -114.742,85.6024 ]
+       "coordinates":  [ -114.742,44.0682 ]
     },
     "properties": {
     "NAME":"Idaho",
