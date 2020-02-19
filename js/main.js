@@ -15,6 +15,7 @@
 
 //I used .setView to center my map on a specific location when it first loads.
 var mymap;
+var minValue;
 //let's make a map
 function createMap(){
     //create the map
@@ -31,24 +32,24 @@ function createMap(){
 	getData();
 };
 
-function onEachFeature(feature, layer) {
-    //no property named popupContent; instead, create html string with all properties
-    var popupContent = "";
-    if (feature.properties) {
-        //loop to add feature property names and values to html string
-        for (var property in feature.properties){
-            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
-        }
-        layer.bindPopup(popupContent);
-    };
-};
+// function onEachFeature(feature, layer) {
+//     //no property named popupContent; instead, create html string with all properties
+//     var popupContent = "";
+//     if (feature.properties) {
+//         //loop to add feature property names and values to html string
+//         for (var property in feature.properties){
+//             popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
+//         }
+//         layer.bindPopup(popupContent);
+//     };
+// };
 
 //function to retrieve the data and place it on the map
 function getData(){
     //load the data
     $.getJSON("data/PopEst_Change.geojson", function(response){
-      minValue = calcMinValue(response);
-      create PropSymbols(response);
+      calcMinValue(response);
+      createPropSymbols(response);
     });
 }
 
@@ -62,9 +63,9 @@ function calcMinValue(data){
       allValues.push(value);
     }
   }
-  var minValue = Math.min(allValues)
-
-  return minValue;
+  console.log(allValues)
+  minValue = Math.min(...allValues)
+  console.log(minValue)
 }
 
 
@@ -73,7 +74,7 @@ function calcPropRadius(attValue){
   var minRadius = 2;
 
   var radius = 1.0083*Math.pow(attValue/minValue,0.5715)*minRadius
-
+  //console.log(minValue)
   return radius
 }
 
@@ -90,16 +91,17 @@ function createPropSymbols(data){
       fillOpacity: 0.8
     };
 
-    L.geoJson(response, {
-        onEachFeature: onEachFeature,
+    L.geoJson(data, {
+        // onEachFeature: onEachFeature,
         pointToLayer: function (feature, latlng){
           var attValue = Number(feature.properties[attribute]);
-          geojsonMarketOptions.radius = calcPropRadius(attValue);
+          // console.log(attValue)
+          geojsonMarkerOptions.radius = calcPropRadius(attValue);
             return L.circleMarker(latlng, geojsonMarkerOptions);
       }
     }).addTo(mymap);
-  });
-}
+  };
+
 
 //.ready will execute the function it requires once the document has all the data it needs.
 $(document).ready(createMap);
