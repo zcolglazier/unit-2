@@ -63,9 +63,9 @@ function calcMinValue(data){
       allValues.push(value);
     }
   }
-  console.log(allValues)
+  //console.log(allValues)
   minValue = Math.min(...allValues)
-  console.log(minValue)
+  //console.log(minValue)
 }
 
 
