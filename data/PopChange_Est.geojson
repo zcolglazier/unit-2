@@ -165,6 +165,26 @@
     "type": "Feature",
     "geometry": {
        "type": "Point",
+       "coordinates":  [ -77.0145666,38.8993487 ]
+    },
+    "properties": {
+    "NAME":"District of Columbia",
+    "POPESTIMATE2010":605226,
+    "POPESTIMATE2011":619800,
+    "POPESTIMATE2012":634924,
+    "POPESTIMATE2013":650581,
+    "POPESTIMATE2014":662328,
+    "POPESTIMATE2015":675400,
+    "POPESTIMATE2016":685815,
+    "POPESTIMATE2017":694906,
+    "POPESTIMATE2018":701547,
+    "POPESTIMATE2019":705749
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
        "coordinates":  [ -81.5158,27.6648 ]
     },
     "properties": {
