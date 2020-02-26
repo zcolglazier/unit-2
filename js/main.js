@@ -32,18 +32,6 @@ function createMap(){
 	getData();
 };
 
-// function onEachFeature(feature, layer) {
-//     //no property named popupContent; instead, create html string with all properties
-//     var popupContent = "";
-//     if (feature.properties) {
-//         //loop to add feature property names and values to html string
-//         for (var property in feature.properties){
-//             popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
-//         }
-//         layer.bindPopup(popupContent);
-//     };
-// };
-
 //function to retrieve the data and place it on the map
 function getData(){
     //load the data
@@ -78,10 +66,9 @@ function calcPropRadius(attValue){
   return radius
 }
 
-
 //build our proportional symbols in a function separate from getData.
-function createPropSymbols(data){
-  var attribute = "POPESTIMATE2010"
+function pointToLayer(feature, latlng){
+  var attribute = "POPESTIMATE2010";
   var geojsonMarkerOptions = {
       radius: 3,
       fillColor: "#986BF0",
@@ -90,17 +77,25 @@ function createPropSymbols(data){
       opacity: 1,
       fillOpacity: 0.8
     };
+  var attValue = Number(feature.properties[attribute]);
+  //console.log(attValue)
+  geojsonMarkerOptions.radius = calcPropRadius(attValue);
+  return L.circleMarker(latlng, geojsonMarkerOptions);
+  //console.log(feature.properties.State)
+  info_string = toString(feature.properties[attribute])
+  var popupContent = "<p><b>State: </b> " + feature.properties.NAME + "</p><p><b>" + attribute + ":</b> " + info_string + "</p>";
+  //console.log(popupContent)
+  layer.bindPopup(popupContent);
+  //console.log(layer)
+  return layer;
+};
 
-    L.geoJson(data, {
-        // onEachFeature: onEachFeature,
-        pointToLayer: function (feature, latlng){
-          var attValue = Number(feature.properties[attribute]);
-          // console.log(attValue)
-          geojsonMarkerOptions.radius = calcPropRadius(attValue);
-            return L.circleMarker(latlng, geojsonMarkerOptions);
-      }
-    }).addTo(mymap);
-  };
+function createPropSymbols(data, map){
+  console.log("This function works")
+  L.geoJson(data, {
+    pointToLayer: pointToLayer
+  }).addTo(mymap);
+};
 
 
 //.ready will execute the function it requires once the document has all the data it needs.
