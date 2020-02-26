@@ -85,7 +85,12 @@ function pointToLayer(feature, latlng){
   info_string = toString(feature.properties[attribute])
   var popupContent = "<p><b>State: </b> " + feature.properties.NAME + "</p><p><b>" + attribute + ":</b> " + info_string + "</p>";
   //console.log(popupContent)
-  layer.bindPopup(popupContent);
+  var year = "2010"
+  popupContent += "<p><b>Population in " + year + ":<b/> " + feature.properties[attribute] + "people</p>";
+
+  layer.bindPopup(popupContent, {
+    offset: new L.Point(0,-options.radius)
+  });
   //console.log(layer)
   return layer;
 };
@@ -97,6 +102,15 @@ function createPropSymbols(data, map){
   }).addTo(mymap);
 };
 
+//pseudocode for sequencing
+//create slider
+//add buttons
+//build array to keep track of order
+//assign attribute based on the index of array
+//event listeners
+//build wrap around
+//update slider position based on index
+//resize symbols
 
 //.ready will execute the function it requires once the document has all the data it needs.
 $(document).ready(createMap);
