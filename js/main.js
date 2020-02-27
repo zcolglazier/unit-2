@@ -16,6 +16,7 @@
 //I used .setView to center my map on a specific location when it first loads.
 var mymap;
 var minValue;
+var atts = [];
 //let's make a map
 function createMap(){
     //create the map
@@ -36,11 +37,23 @@ function createMap(){
 function getData(){
     //load the data
     $.getJSON("data/Change_Pop.geojson", function(response){
+      var atts = processData(response);
       calcMinValue(response);
-      createPropSymbols(response);
+      createPropSymbols(response, atts);
       sequence_controls();
     });
 }
+
+function processData(data){
+  var props = data.features[0].properties;
+  for (var att in props) {
+    if (att.indexOf('pop')>-1){
+      atts.push(att);
+    };
+  };
+  console.log(atts);
+  return atts;
+};
 
 //find the minimum value so that we know how to base our prop symbol radii
 function calcMinValue(data){
@@ -71,7 +84,8 @@ function calcPropRadius(attValue){
 //My functions based on lab examples
 //build our proportional symbols in a function separate from getData.
 function pointToLayer(feature, latlng){
-  var attribute = "pop_2010";
+  var attribute = atts[0];
+  console.log(attribute)
   var options = {
       radius: 3,
       fillColor: "#986BF0",
@@ -100,12 +114,12 @@ function pointToLayer(feature, latlng){
   return layer;
 };
 
-function createPropSymbols(data){
+function createPropSymbols(data, atts){
   //console.log("This function works")
   L.geoJson(data, {
     pointToLayer: function(feature, latlng){
       //console.log('ahhhhh')
-      return pointToLayer(feature, latlng);
+      return pointToLayer(feature, latlng, atts);
     }
   }).addTo(mymap);
 };
