@@ -154,17 +154,17 @@ function sequence_controls(){
     var index = $('ranger-slider').val();
     if ($(this).attr('id') == 'forward'){
       index++
-      index = index > 6 ? 0:index;
+      index = index > 9 ? 0:index;
     } else if ($(this).attr('id')=='reverse'){
       index --
-      index = index<0 ? 6 :index;
+      index = index<0 ? 9 :index;
     };
     $('.range-slider').val(index);
   });
   $('.range-slider').on('input', function(){
     var index = $(this).val();
 
-  updatePropSymbols(attributes[index]);
+  updatePropSymbols(attribute[index]);
   })
 };
 
