@@ -85,7 +85,7 @@ function calcPropRadius(attValue){
 //build our proportional symbols in a function separate from getData.
 function pointToLayer(feature, latlng){
   var attribute = atts[0];
-  console.log(attribute)
+  //console.log(attribute)
   var options = {
       radius: 3,
       fillColor: "#986BF0",
@@ -149,8 +149,40 @@ function sequence_controls(){
 
   $('#reverse').html('<img src="img/reverse.png">');
   $('#forward').html('<img src="img/forward.png">');
+
+  $('.step').click(function(){
+    var index = $('ranger-slider').val();
+    if ($(this).attr('id') == 'forward'){
+      index++
+      index = index > 6 ? 0:index;
+    } else if ($(this).attr('id')=='reverse'){
+      index --
+      index = index<0 ? 6 :index;
+    };
+    $('.range-slider').val(index);
+  });
+  $('.range-slider').on('input', function(){
+    var index = $(this).val();
+
+  updatePropSymbols(attributes[index]);
+  })
 };
 
+function updatePropSymbols(attribute){
+  map.eachLayer(function(layer){
+    if (layer.feature && layer.feature.properties[attribute]){
+      var props = layer.feature.properties;
+      var radius = calcPropRadius(props[attribute]);
+      layer.setRadius(radius);
+      var statename = "NAME"
+      var popupContent = "<p><b>State:</b>" + props.name + "</p>";
+      var year = attribute.split("_")[1];
+      popupContent += "<p><b>Population in "+year+":</b>" + props[attribute] + " people</p>";
 
+      popup = layer.getPopup()
+      popup.setContent(popupContent).update();
+    };
+  });
+};
 //.ready will execute the function it requires once the document has all the data it needs.
 $(document).ready(createMap);
