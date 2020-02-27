@@ -35,7 +35,7 @@ function createMap(){
 //function to retrieve the data and place it on the map
 function getData(){
     //load the data
-    $.getJSON("data/PopEst_Change.geojson", function(response){
+    $.getJSON("data/Pop_Change.geojson", function(response){
       calcMinValue(response);
       createPropSymbols(response);
     });
@@ -47,7 +47,7 @@ function calcMinValue(data){
 
   for (var state of data.features){
     for (var year = 2010; year<=2019; year +=1){
-      var value = state.properties["POPESTIMATE" + String(year)];
+      var value = state.properties[String(year)];
       allValues.push(value);
     }
   }
@@ -66,10 +66,11 @@ function calcPropRadius(attValue){
   return radius
 }
 
+//My functions based on lab examples
 //build our proportional symbols in a function separate from getData.
 function pointToLayer(feature, latlng){
-  var attribute = "POPESTIMATE2010";
-  var geojsonMarkerOptions = {
+  var attribute = "2010";
+  var options = {
       radius: 3,
       fillColor: "#986BF0",
       color: "#000",
@@ -77,16 +78,15 @@ function pointToLayer(feature, latlng){
       opacity: 1,
       fillOpacity: 0.8
     };
+
+  var statename = "NAME"
   var attValue = Number(feature.properties[attribute]);
   //console.log(attValue)
-  geojsonMarkerOptions.radius = calcPropRadius(attValue);
-  return L.circleMarker(latlng, geojsonMarkerOptions);
+  options.radius = calcPropRadius(attValue);
+  var layer = L.circleMarker(latlng, options);
   //console.log(feature.properties.State)
-  info_string = toString(feature.properties[attribute])
-  var popupContent = "<p><b>State: </b> " + feature.properties.NAME + "</p><p><b>" + attribute + ":</b> " + info_string + "</p>";
-  //console.log(popupContent)
-  var year = "2010"
-  popupContent += "<p><b>Population in " + year + ":<b/> " + feature.properties[attribute] + "people</p>";
+  var popupContent = "<p><b>State: </b> " + feature.properties[statename];
+  popupContent += "<p><b>Population in " + attribute + ":<b/> " + feature.properties[attribute] + " people</p>";
 
   layer.bindPopup(popupContent, {
     offset: new L.Point(0,-options.radius)
