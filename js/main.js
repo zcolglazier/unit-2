@@ -17,6 +17,7 @@
 var mymap;
 var minValue;
 var atts = [];
+var index = 0
 //let's make a map
 function createMap(){
     //create the map
@@ -40,7 +41,7 @@ function getData(){
       var atts = processData(response);
       calcMinValue(response);
       createPropSymbols(response, atts);
-      sequence_controls();
+      sequence_controls(atts);
     });
 }
 
@@ -84,7 +85,7 @@ function calcPropRadius(attValue){
 //My functions based on lab examples
 //build our proportional symbols in a function separate from getData.
 function pointToLayer(feature, latlng){
-  var attribute = atts[0];
+  var attribute = atts[index];
   //console.log(attribute)
   var options = {
       radius: 3,
@@ -134,7 +135,7 @@ function createPropSymbols(data, atts){
 //update slider position based on index
 //resize symbols
 
-function sequence_controls(){
+function sequence_controls(atts){
   $('#panel').append('<input class="range-slider" type="range">');
   console.log('Looks like we made it!')
   $('.range-slider').attr({
@@ -149,9 +150,10 @@ function sequence_controls(){
 
   $('#reverse').html('<img src="img/reverse.png">');
   $('#forward').html('<img src="img/forward.png">');
-
+  console.log('buttons')
   $('.step').click(function(){
-    var index = $('ranger-slider').val();
+    var index = $('.ranger-slider').val();
+    console.log(index)
     if ($(this).attr('id') == 'forward'){
       index++
       index = index > 9 ? 0:index;
@@ -160,24 +162,26 @@ function sequence_controls(){
       index = index<0 ? 9 :index;
     };
     $('.range-slider').val(index);
+    updatePropSymbols(atts[index]);
   });
   $('.range-slider').on('input', function(){
     var index = $(this).val();
-
-  updatePropSymbols(attribute[index]);
+    return index
+  console.log('got index')
+  updatePropSymbols(atts[index]);
   })
 };
 
-function updatePropSymbols(attribute){
-  map.eachLayer(function(layer){
-    if (layer.feature && layer.feature.properties[attribute]){
+function updatePropSymbols(atts){
+  mymap.eachLayer(function(layer){
+    if (layer.feature && layer.feature.properties[atts]){
       var props = layer.feature.properties;
-      var radius = calcPropRadius(props[attribute]);
+      var radius = calcPropRadius(props[atts]);
       layer.setRadius(radius);
       var statename = "NAME"
       var popupContent = "<p><b>State:</b>" + props.name + "</p>";
       var year = attribute.split("_")[1];
-      popupContent += "<p><b>Population in "+year+":</b>" + props[attribute] + " people</p>";
+      popupContent += "<p><b>Population in "+year+":</b>" + props[atts] + " people</p>";
 
       popup = layer.getPopup()
       popup.setContent(popupContent).update();
