@@ -29,9 +29,9 @@ function onEachFeature(feature, layer) {
 };
 
 //function to retrieve the data and place it on the map
-function getData(mymap){
+function getData(){
     //load the data
-    $.getJSON("data/MegaCities.geojson", function(response){
+    $.getJSON("data/Pop_Change.geojson", function(response){
 		var geojsonMarkerOptions = {
 				radius: 8,
 				fillColor: "#ff7800",

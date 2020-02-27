@@ -35,7 +35,7 @@ function createMap(){
 //function to retrieve the data and place it on the map
 function getData(){
     //load the data
-    $.getJSON("data/Pop_Change.geojson", function(response){
+    $.getJSON("data/Change_Pop.geojson", function(response){
       calcMinValue(response);
       createPropSymbols(response);
       sequence_controls();
@@ -48,7 +48,8 @@ function calcMinValue(data){
 
   for (var state of data.features){
     for (var year = 2010; year<=2019; year +=1){
-      var value = state.properties[String(year)];
+      var value = state.properties["pop_" + String(year)];
+      //console.log(value)
       allValues.push(value);
     }
   }
@@ -70,7 +71,7 @@ function calcPropRadius(attValue){
 //My functions based on lab examples
 //build our proportional symbols in a function separate from getData.
 function pointToLayer(feature, latlng){
-  var attribute = "2010";
+  var attribute = "pop_2010";
   var options = {
       radius: 3,
       fillColor: "#986BF0",
@@ -86,20 +87,26 @@ function pointToLayer(feature, latlng){
   options.radius = calcPropRadius(attValue);
   var layer = L.circleMarker(latlng, options);
   //console.log(feature.properties.State)
+  var year = attribute.split('_')[1];
+  //console.log(year)
   var popupContent = "<p><b>State: </b> " + feature.properties[statename];
-  popupContent += "<p><b>Population in " + attribute + ":<b/> " + feature.properties[attribute] + " people</p>";
+  popupContent += "<p><b>Population in " + year + ":</b> " + feature.properties[attribute] + " people</p>";
 
   layer.bindPopup(popupContent, {
     offset: new L.Point(0,-options.radius)
   });
+  //console.log("i hate this lab");
   //console.log(layer)
   return layer;
 };
 
-function createPropSymbols(data, map){
-  console.log("This function works")
+function createPropSymbols(data){
+  //console.log("This function works")
   L.geoJson(data, {
-    pointToLayer: pointToLayer
+    pointToLayer: function(feature, latlng){
+      //console.log('ahhhhh')
+      return pointToLayer(feature, latlng);
+    }
   }).addTo(mymap);
 };
 
