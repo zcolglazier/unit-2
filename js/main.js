@@ -38,6 +38,7 @@ function getData(){
     $.getJSON("data/Pop_Change.geojson", function(response){
       calcMinValue(response);
       createPropSymbols(response);
+      sequence_controls();
     });
 }
 
@@ -111,6 +112,24 @@ function createPropSymbols(data, map){
 //build wrap around
 //update slider position based on index
 //resize symbols
+
+function sequence_controls(){
+  $('#panel').append('<input class="range-slider" type="range">');
+  console.log('Looks like we made it!')
+  $('.range-slider').attr({
+    max: 9,
+    min: 0,
+    value: 0,
+    step: 1
+  });
+
+  $('#panel').append('<button class="step" id="reverse">Reverse</button>');
+  $('#panel').append('<button class="step" id="forward">Forward</button>');
+
+  $('#reverse').html('<img src="img/reverse.png">');
+  $('#forward').html('<img src="img/forward.png">');
+};
+
 
 //.ready will execute the function it requires once the document has all the data it needs.
 $(document).ready(createMap);

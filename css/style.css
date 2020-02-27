@@ -5,7 +5,7 @@
 }
 
 #panel {
-  width: 16%;
+  width: 25%;
   padding: 20px;
   display: inline-block;
   vertical-align: top;
@@ -13,6 +13,26 @@
   line-height: 42px;
 }
 
-.leaflet-popup-content p {
+.range-slider {
+  width: 55%
+}
+
+.step{
+  width:20%
+}
+
+.step img{
+  width: 100%
+}
+
+#forward {
+  float:right;
+}
+
+#reverse {
+  float:left;
+}
+
+.leaflet-popup-content {
   font-family:Georgia;
 }
