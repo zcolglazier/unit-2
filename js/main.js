@@ -152,7 +152,7 @@ function sequence_controls(atts){
   $('#forward').html('<img src="img/forward.png">');
   console.log('buttons')
   $('.step').click(function(){
-    var index = $('.ranger-slider').val();
+    var index = $('.range-slider').val();
     console.log(index)
     if ($(this).attr('id') == 'forward'){
       index++
@@ -180,7 +180,7 @@ function updatePropSymbols(atts){
       layer.setRadius(radius);
       var statename = "NAME"
       var popupContent = "<p><b>State:</b>" + props.name + "</p>";
-      var year = attribute.split("_")[1];
+      var year = atts.split("_")[1];
       popupContent += "<p><b>Population in "+year+":</b>" + props[atts] + " people</p>";
 
       popup = layer.getPopup()
