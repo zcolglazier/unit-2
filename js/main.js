@@ -105,6 +105,7 @@ function pointToLayer(feature, latlng){
   var year = attribute.split('_')[1];
   //console.log(year)
   var popupContent = "<p><b>State: </b> " + feature.properties[statename];
+  console.log(popupContent)
   popupContent += "<p><b>Population in " + year + ":</b> " + feature.properties[attribute] + " people</p>";
 
   layer.bindPopup(popupContent, {
@@ -179,7 +180,7 @@ function updatePropSymbols(atts){
       var radius = calcPropRadius(props[atts]);
       layer.setRadius(radius);
       var statename = "NAME"
-      var popupContent = "<p><b>State:</b>" + props.name + "</p>";
+      var popupContent = "<p><b>State:</b>" + props[statename] + "</p>";
       var year = atts.split("_")[1];
       popupContent += "<p><b>Population in "+year+":</b>" + props[atts] + " people</p>";
 
