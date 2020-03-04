@@ -34,6 +34,29 @@ function createMap(){
 	getData();
 };
 
+function createLegend(attributes){
+    var LegendControl = L.Control.extend({
+        options: {
+            position: 'bottomright'
+        },
+
+        onAdd: function () {
+            // create the control container with a particular class name
+            var container = L.DomUtil.create('div', 'legend-control-container');
+
+            //PUT YOUR SCRIPT TO CREATE THE TEMPORAL LEGEND HERE
+            //console.log(attributes)
+            var year = attributes.split('_')[1]
+            console.log(year)
+            $(container).append("Population in "+ year)
+            L.DomEvent.disableClickPropagation(container);
+            return container;
+        }
+    });
+
+    mymap.addControl(new LegendControl());
+};
+
 function PopupContent(properties, attribute){
   var statename = "NAME"
   this.properties = properties
@@ -129,7 +152,9 @@ function createPropSymbols(data, atts){
   L.geoJson(data, {
     pointToLayer: function(feature, latlng){
       //console.log('ahhhhh')
+      //console.log(atts[index])
       return pointToLayer(feature, latlng, atts);
+      //createLegend(attribute)
     }
   }).addTo(mymap);
 };
@@ -162,6 +187,13 @@ function sequence_controls(atts){
     }
     })
     mymap.addControl(new SequenceControl());
+    $('.range-slider').attr({
+      max: 9,
+      min: 0,
+      value: 0,
+      step: 1
+    });
+
     $('.step').click(function(){
       var index = $('.range-slider').val();
       console.log(index)
@@ -184,42 +216,6 @@ function sequence_controls(atts){
       updatePropSymbols(atts[index]);
     });
   }
-  // $('#panel').append('<input class="range-slider" type="range">');
-  // console.log('Looks like we made it!')
-  // $('.range-slider').attr({
-  //   max: 9,
-  //   min: 0,
-  //   value: 0,
-  //   step: 1
-  // });
-  //
-  // $('#panel').append('<button class="step" id="reverse">Reverse</button>');
-  // $('#panel').append('<button class="step" id="forward">Forward</button>');
-  //
-  // $('#reverse').html('<img src="img/reverse.png">');
-  // $('#forward').html('<img src="img/forward.png">');
-  // //console.log('buttons')
-  // $('.step').click(function(){
-  //   var index = $('.range-slider').val();
-  //   console.log(index)
-  //   if ($(this).attr('id') == 'forward'){
-  //     index++
-  //     index = index > 9 ? 0:index;
-  //   } else if ($(this).attr('id')=='reverse'){
-  //     index --
-  //     index = index<0 ? 9 :index;
-  //   };
-  //   $('.range-slider').val(index);
-  //   var attribute = atts[index]
-  //   updatePropSymbols(attribute);
-  // });
-  // $('.range-slider').on('input', function(){
-  //   var index = $(this).val();
-  //   //return index
-  //   console.log('got index')
-  //   attribute = atts[index]
-  //   updatePropSymbols(atts[index]);
-  // });
 
 function updatePropSymbols(atts){
   mymap.eachLayer(function(layer){
@@ -229,14 +225,51 @@ function updatePropSymbols(atts){
       layer.setRadius(radius);
       var statename = "NAME"
       var popupContent = new PopupContent(layer.feature.properties, atts)
-      // "<p><b>State:</b>" + props[statename] + "</p>";
-      // var year = atts.split("_")[1];
-      // popupContent += "<p><b>Population in "+year+":</b>" + props[atts] + " people</p>";
-
       popup = layer.getPopup()
       popup.setContent(popupContent.formatted).update();
+      console.log('ready to update legend')
+      createLegend(atts);
     };
   });
 };
+
 //.ready will execute the function it requires once the document has all the data it needs.
 $(document).ready(createMap);
+
+
+// $('#panel').append('<input class="range-slider" type="range">');
+// console.log('Looks like we made it!')
+// $('.range-slider').attr({
+//   max: 9,
+//   min: 0,
+//   value: 0,
+//   step: 1
+// });
+//
+// $('#panel').append('<button class="step" id="reverse">Reverse</button>');
+// $('#panel').append('<button class="step" id="forward">Forward</button>');
+//
+// $('#reverse').html('<img src="img/reverse.png">');
+// $('#forward').html('<img src="img/forward.png">');
+// //console.log('buttons')
+// $('.step').click(function(){
+//   var index = $('.range-slider').val();
+//   console.log(index)
+//   if ($(this).attr('id') == 'forward'){
+//     index++
+//     index = index > 9 ? 0:index;
+//   } else if ($(this).attr('id')=='reverse'){
+//     index --
+//     index = index<0 ? 9 :index;
+//   };
+//   $('.range-slider').val(index);
+//   var attribute = atts[index]
+//   updatePropSymbols(attribute);
+// });
+// $('.range-slider').on('input', function(){
+//   var index = $(this).val();
+//   //return index
+//   console.log('got index')
+//   attribute = atts[index]
+//   updatePropSymbols(atts[index]);
+// });
