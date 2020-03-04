@@ -4,6 +4,16 @@
   display: inline-block;
 }
 
+.sequence-control-container{
+  width: 350px;
+  height: 30px;
+  background-color: rgba(255,255,255,0.8);
+  padding: 10px;
+  line-height: 45px;
+  text-align: center;
+  border: solid gray 1px;
+}
+
 #panel {
   width: 25%;
   padding: 20px;

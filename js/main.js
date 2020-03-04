@@ -145,6 +145,45 @@ function createPropSymbols(data, atts){
 //resize symbols
 
 function sequence_controls(atts){
+  var SequenceControl = L.Control.extend({
+    options: {
+      position: 'bottomleft'
+    },
+
+    onAdd: function(){
+      var container = L.DomUtil.create('div', 'sequence-control-container')
+      $(container).append('<input class="range-slider" type="range">');
+      $(container).append('<button class="step" id="reverse">Reverse</button>');
+      $(container).append('<button class="step" id="forward">Forward</button>');
+      $('#reverse').html('<img src="img/reverse.png">');
+      $('#forward').html('<img src="img/forward.png">');
+      L.DomEvent.disableClickPropagation(container);
+      return container
+    }
+    })
+    mymap.addControl(new SequenceControl());
+    $('.step').click(function(){
+      var index = $('.range-slider').val();
+      console.log(index)
+      if ($(this).attr('id') == 'forward'){
+        index++
+        index = index > 9 ? 0:index;
+      } else if ($(this).attr('id')=='reverse'){
+        index --
+        index = index<0 ? 9 :index;
+      };
+      $('.range-slider').val(index);
+      var attribute = atts[index]
+      updatePropSymbols(attribute);
+    });
+    $('.range-slider').on('input', function(){
+      var index = $(this).val();
+      //return index
+      console.log('got index')
+      attribute = atts[index]
+      updatePropSymbols(atts[index]);
+    });
+  }
   $('#panel').append('<input class="range-slider" type="range">');
   console.log('Looks like we made it!')
   $('.range-slider').attr({
@@ -180,8 +219,7 @@ function sequence_controls(atts){
     console.log('got index')
     attribute = atts[index]
     updatePropSymbols(atts[index]);
-  })
-};
+  });
 
 function updatePropSymbols(atts){
   mymap.eachLayer(function(layer){
