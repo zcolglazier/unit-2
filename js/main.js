@@ -184,42 +184,42 @@ function sequence_controls(atts){
       updatePropSymbols(atts[index]);
     });
   }
-  $('#panel').append('<input class="range-slider" type="range">');
-  console.log('Looks like we made it!')
-  $('.range-slider').attr({
-    max: 9,
-    min: 0,
-    value: 0,
-    step: 1
-  });
-
-  $('#panel').append('<button class="step" id="reverse">Reverse</button>');
-  $('#panel').append('<button class="step" id="forward">Forward</button>');
-
-  $('#reverse').html('<img src="img/reverse.png">');
-  $('#forward').html('<img src="img/forward.png">');
-  //console.log('buttons')
-  $('.step').click(function(){
-    var index = $('.range-slider').val();
-    console.log(index)
-    if ($(this).attr('id') == 'forward'){
-      index++
-      index = index > 9 ? 0:index;
-    } else if ($(this).attr('id')=='reverse'){
-      index --
-      index = index<0 ? 9 :index;
-    };
-    $('.range-slider').val(index);
-    var attribute = atts[index]
-    updatePropSymbols(attribute);
-  });
-  $('.range-slider').on('input', function(){
-    var index = $(this).val();
-    //return index
-    console.log('got index')
-    attribute = atts[index]
-    updatePropSymbols(atts[index]);
-  });
+  // $('#panel').append('<input class="range-slider" type="range">');
+  // console.log('Looks like we made it!')
+  // $('.range-slider').attr({
+  //   max: 9,
+  //   min: 0,
+  //   value: 0,
+  //   step: 1
+  // });
+  //
+  // $('#panel').append('<button class="step" id="reverse">Reverse</button>');
+  // $('#panel').append('<button class="step" id="forward">Forward</button>');
+  //
+  // $('#reverse').html('<img src="img/reverse.png">');
+  // $('#forward').html('<img src="img/forward.png">');
+  // //console.log('buttons')
+  // $('.step').click(function(){
+  //   var index = $('.range-slider').val();
+  //   console.log(index)
+  //   if ($(this).attr('id') == 'forward'){
+  //     index++
+  //     index = index > 9 ? 0:index;
+  //   } else if ($(this).attr('id')=='reverse'){
+  //     index --
+  //     index = index<0 ? 9 :index;
+  //   };
+  //   $('.range-slider').val(index);
+  //   var attribute = atts[index]
+  //   updatePropSymbols(attribute);
+  // });
+  // $('.range-slider').on('input', function(){
+  //   var index = $(this).val();
+  //   //return index
+  //   console.log('got index')
+  //   attribute = atts[index]
+  //   updatePropSymbols(atts[index]);
+  // });
 
 function updatePropSymbols(atts){
   mymap.eachLayer(function(layer){
