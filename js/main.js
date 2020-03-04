@@ -40,7 +40,7 @@ function PopupContent(properties, attribute){
   this.attribute = attribute
   this.year = attribute.split('_')[1]
   this.population = this.properties[attribute]
-  this.formatted = "<p><b>City:</b> " + this.properties[statename] + "</p><p><b>Population in " + this.year + ":</b>" + this.population + "people</p>";
+  this.formatted = "<p><b>State:</b> " + this.properties[statename] + "</p><p><b>Population in " + this.year + ": </b>" + this.population + " people</p>";
 }
 
 function getData(){
@@ -103,7 +103,7 @@ function pointToLayer(feature, latlng){
       opacity: 1,
       fillOpacity: 0.8
     };
-  var popupContent = new PopupContent(feature.properties, attributes)
+  var popupContent = new PopupContent(feature.properties, attribute)
   var statename = "NAME"
   var attValue = Number(feature.properties[attribute]);
   //console.log(attValue)
@@ -113,10 +113,10 @@ function pointToLayer(feature, latlng){
   var year = attribute.split('_')[1];
   //console.log(year)
   // var popupContent = "<p><b>State: </b> " + feature.properties[statename];
-  // console.log(popupContent)
+  //console.log(popupContent)
   // popupContent += "<p><b>Population in " + year + ":</b> " + feature.properties[attribute] + " people</p>";
 
-  layer.bindPopup(popupContent, {
+  layer.bindPopup(popupContent.formatted, {
     offset: new L.Point(0,-options.radius)
   });
   //console.log("i hate this lab");
@@ -159,7 +159,7 @@ function sequence_controls(atts){
 
   $('#reverse').html('<img src="img/reverse.png">');
   $('#forward').html('<img src="img/forward.png">');
-  console.log('buttons')
+  //console.log('buttons')
   $('.step').click(function(){
     var index = $('.range-slider').val();
     console.log(index)
@@ -171,13 +171,15 @@ function sequence_controls(atts){
       index = index<0 ? 9 :index;
     };
     $('.range-slider').val(index);
-    updatePropSymbols(atts[index]);
+    var attribute = atts[index]
+    updatePropSymbols(attribute);
   });
   $('.range-slider').on('input', function(){
     var index = $(this).val();
-    return index
-  console.log('got index')
-  updatePropSymbols(atts[index]);
+    //return index
+    console.log('got index')
+    attribute = atts[index]
+    updatePropSymbols(atts[index]);
   })
 };
 
@@ -188,12 +190,13 @@ function updatePropSymbols(atts){
       var radius = calcPropRadius(props[atts]);
       layer.setRadius(radius);
       var statename = "NAME"
-      var popupContent = "<p><b>State:</b>" + props[statename] + "</p>";
-      var year = atts.split("_")[1];
-      popupContent += "<p><b>Population in "+year+":</b>" + props[atts] + " people</p>";
+      var popupContent = new PopupContent(layer.feature.properties, atts)
+      // "<p><b>State:</b>" + props[statename] + "</p>";
+      // var year = atts.split("_")[1];
+      // popupContent += "<p><b>Population in "+year+":</b>" + props[atts] + " people</p>";
 
       popup = layer.getPopup()
-      popup.setContent(popupContent).update();
+      popup.setContent(popupContent.formatted).update();
     };
   });
 };
