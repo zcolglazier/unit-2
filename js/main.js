@@ -34,7 +34,15 @@ function createMap(){
 	getData();
 };
 
-//function to retrieve the data and place it on the map
+function PopupContent(properties, attribute){
+  var statename = "NAME"
+  this.properties = properties
+  this.attribute = attribute
+  this.year = attribute.split('_')[1]
+  this.population = this.properties[attribute]
+  this.formatted = "<p><b>City:</b> " + this.properties[statename] + "</p><p><b>Population in " + this.year + ":</b>" + this.population + "people</p>";
+}
+
 function getData(){
     //load the data
     $.getJSON("data/Change_Pop.geojson", function(response){
@@ -95,7 +103,7 @@ function pointToLayer(feature, latlng){
       opacity: 1,
       fillOpacity: 0.8
     };
-
+  var popupContent = new PopupContent(feature.properties, attributes)
   var statename = "NAME"
   var attValue = Number(feature.properties[attribute]);
   //console.log(attValue)
@@ -104,9 +112,9 @@ function pointToLayer(feature, latlng){
   //console.log(feature.properties.State)
   var year = attribute.split('_')[1];
   //console.log(year)
-  var popupContent = "<p><b>State: </b> " + feature.properties[statename];
-  console.log(popupContent)
-  popupContent += "<p><b>Population in " + year + ":</b> " + feature.properties[attribute] + " people</p>";
+  // var popupContent = "<p><b>State: </b> " + feature.properties[statename];
+  // console.log(popupContent)
+  // popupContent += "<p><b>Population in " + year + ":</b> " + feature.properties[attribute] + " people</p>";
 
   layer.bindPopup(popupContent, {
     offset: new L.Point(0,-options.radius)
