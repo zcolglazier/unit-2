@@ -34,7 +34,7 @@ function createMap(){
 	getData();
 };
 
-function createLegend(attributes){
+function createLegend(){
     var LegendControl = L.Control.extend({
         options: {
             position: 'bottomright'
@@ -46,9 +46,7 @@ function createLegend(attributes){
 
             //PUT YOUR SCRIPT TO CREATE THE TEMPORAL LEGEND HERE
             //console.log(attributes)
-            var year = attributes.split('_')[1]
-            console.log(year)
-            $(container).append("Population in "+ year)
+            $(container).append("<p id='legend'><b>Population in 2010 </b></p>")
             L.DomEvent.disableClickPropagation(container);
             return container;
         }
@@ -73,6 +71,7 @@ function getData(){
       calcMinValue(response);
       createPropSymbols(response, atts);
       sequence_controls(atts);
+      createLegend();
     });
 }
 
@@ -227,49 +226,11 @@ function updatePropSymbols(atts){
       var popupContent = new PopupContent(layer.feature.properties, atts)
       popup = layer.getPopup()
       popup.setContent(popupContent.formatted).update();
-      console.log('ready to update legend')
-      createLegend(atts);
-    };
-  });
+      //console.log('ready to update legend')
+      $("#legend").html("<b>Population in: </b>"+ popupContent.year)
+  };
+});
 };
 
 //.ready will execute the function it requires once the document has all the data it needs.
 $(document).ready(createMap);
-
-
-// $('#panel').append('<input class="range-slider" type="range">');
-// console.log('Looks like we made it!')
-// $('.range-slider').attr({
-//   max: 9,
-//   min: 0,
-//   value: 0,
-//   step: 1
-// });
-//
-// $('#panel').append('<button class="step" id="reverse">Reverse</button>');
-// $('#panel').append('<button class="step" id="forward">Forward</button>');
-//
-// $('#reverse').html('<img src="img/reverse.png">');
-// $('#forward').html('<img src="img/forward.png">');
-// //console.log('buttons')
-// $('.step').click(function(){
-//   var index = $('.range-slider').val();
-//   console.log(index)
-//   if ($(this).attr('id') == 'forward'){
-//     index++
-//     index = index > 9 ? 0:index;
-//   } else if ($(this).attr('id')=='reverse'){
-//     index --
-//     index = index<0 ? 9 :index;
-//   };
-//   $('.range-slider').val(index);
-//   var attribute = atts[index]
-//   updatePropSymbols(attribute);
-// });
-// $('.range-slider').on('input', function(){
-//   var index = $(this).val();
-//   //return index
-//   console.log('got index')
-//   attribute = atts[index]
-//   updatePropSymbols(atts[index]);
-// });
