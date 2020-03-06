@@ -46,7 +46,7 @@ function createLegend(){
 
             //PUT YOUR SCRIPT TO CREATE THE TEMPORAL LEGEND HERE
             //console.log(attributes)
-            $(container).append("<p id='legend'><b>Population in 2010 </b></p>")
+            $(container).append("<p id='legend'><b>Population in:</b> 2010</p>")
             L.DomEvent.disableClickPropagation(container);
             return container;
         }
