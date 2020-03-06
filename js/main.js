@@ -18,6 +18,7 @@ var mymap;
 var minValue;
 var atts = [];
 var index = 0
+var data_stats = {}
 //let's make a map
 function createMap(){
     //create the map
@@ -48,6 +49,20 @@ function createLegend(){
             //console.log(attributes)
             $(container).append("<p id='legend'><b>Population in:</b> 2010</p>")
             L.DomEvent.disableClickPropagation(container);
+            console.log('creating svg')
+            var svg = '<svg id="att-legend" width="130px" height = "130px"';
+            var circles = ["max", "mean", "min"];
+            for (var i=0; i<circles.length; i++){
+              console.log(circles[i])
+              console.log(data_stats[circles[i]]);
+              var rad = calcPropRadius(data_stats[circles[i]]);
+              console.log(rad)
+              var cy=130-rad;
+              svg+="<circle class='legend-circle' id='+circles[i] +' fill='#986BF0' fill-opacity = '0.8' stroke = '#000000' cx = '65'/> ";
+            };
+            svg+= '</svg>';
+            console.log(svg)
+            $(container).append(svg);
             return container;
         }
     });
@@ -68,7 +83,7 @@ function getData(){
     //load the data
     $.getJSON("data/Change_Pop.geojson", function(response){
       var atts = processData(response);
-      calcMinValue(response);
+      calcStats(response);
       createPropSymbols(response, atts);
       sequence_controls(atts);
       createLegend();
@@ -87,9 +102,8 @@ function processData(data){
 };
 
 //find the minimum value so that we know how to base our prop symbol radii
-function calcMinValue(data){
+function calcStats(data){
   var allValues = [];
-
   for (var state of data.features){
     for (var year = 2010; year<=2019; year +=1){
       var value = state.properties["pop_" + String(year)];
@@ -98,7 +112,10 @@ function calcMinValue(data){
     }
   }
   //console.log(allValues)
-  minValue = Math.min(...allValues)
+  data_stats.min = Math.min(...allValues)
+  data_stats.max = Math.max(...allValues)
+  var sum = allValues.reduce(function(a,b){return a+b});
+  data_stats.mean = sum/allValues.length;
   //console.log(minValue)
 }
 
@@ -107,7 +124,7 @@ function calcMinValue(data){
 function calcPropRadius(attValue){
   var minRadius = 2;
 
-  var radius = 1.0083*Math.pow(attValue/minValue,0.5715)*minRadius
+  var radius = 1.0083*Math.pow(attValue/data_stats.min,0.5715)*minRadius
   //console.log(minValue)
   return radius
 }
