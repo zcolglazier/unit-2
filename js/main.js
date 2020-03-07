@@ -53,16 +53,20 @@ function createLegend(){
             var svg = '<svg id="att-legend" width="130px" height = "130px"';
             var circles = ["max", "mean", "min"];
             for (var i=0; i<circles.length; i++){
-              console.log(circles[i])
-              console.log(data_stats[circles[i]]);
+              //console.log(circles[i])
+              //console.log(data_stats[circles[i]]);
               var rad = calcPropRadius(data_stats[circles[i]]);
-              console.log(rad)
-              var cy=130-rad;
-              svg+="<circle class='legend-circle' id='+circles[i] +' fill='#986BF0' fill-opacity = '0.8' stroke = '#000000' cx = '65'/> ";
+              //console.log(rad)
+              var cx=30
+              var cy=59-rad;
+              svg+=svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + rad + '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="30"/>';
+              var textY = i * 20 + 20;
+              svg += '<text id="' + circles[i] + '-text" x="65" y="' + textY + '">' + Math.round(data_stats[circles[i]]*100)/100 + " million" + '</text>';
             };
             svg+= '</svg>';
-            console.log(svg)
+            //console.log(svg)
             $(container).append(svg);
+            //console.log('svg in container')
             return container;
         }
     });
@@ -194,8 +198,8 @@ function sequence_controls(atts){
     onAdd: function(){
       var container = L.DomUtil.create('div', 'sequence-control-container')
       $(container).append('<input class="range-slider" type="range">');
-      $(container).append('<button class="step" id="reverse">Reverse</button>');
-      $(container).append('<button class="step" id="forward">Forward</button>');
+      $(container).append('<button class="step" id="reverse">R</button>');
+      $(container).append('<button class="step" id="forward">F</button>');
       $('#reverse').html('<img src="img/reverse.png">');
       $('#forward').html('<img src="img/forward.png">');
       L.DomEvent.disableClickPropagation(container);
@@ -212,7 +216,7 @@ function sequence_controls(atts){
 
     $('.step').click(function(){
       var index = $('.range-slider').val();
-      console.log(index)
+      //console.log(index)
       if ($(this).attr('id') == 'forward'){
         index++
         index = index > 9 ? 0:index;
@@ -227,7 +231,7 @@ function sequence_controls(atts){
     $('.range-slider').on('input', function(){
       var index = $(this).val();
       //return index
-      console.log('got index')
+      //console.log('got index')
       attribute = atts[index]
       updatePropSymbols(atts[index]);
     });

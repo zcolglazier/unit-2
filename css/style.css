@@ -1,3 +1,10 @@
+#title {
+  font-family: Georgia,
+  color:"#986BF0"
+}
+#body {
+  background-color: rgba(255,255,255,0.8)
+}
 #map {
   height: 400px;
   width: 100%;
@@ -15,11 +22,11 @@
 }
 
 .legend-control-container{
-  width: 200px;
-  height: 30px;
+  width: 160px;
+  height: 60px;
   background-color: rgba(255,255,255,0.8);
-  padding: 10px;
-  line-height: 15px;
+  padding: 8px;
+  line-height: 10px;
   text-align: center;
   border: solid gray 1px;
 }
