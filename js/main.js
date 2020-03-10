@@ -1,19 +1,7 @@
-//Pseudocode planning: overview of assignments A6, A7
-//pan and zoom are default from  leaflet
-//create pop symbol map by creating function that creates symbol radius based on Flannery
-  //determine attr for scaling
-  //determine value at attr
-  //give marker radius
-//retrieve:
-  //build popups for 2010 data that are formatted the way I would like.
-//sequence:
-  //create slider
-  //create steppers
-  //create functionality of steppers
-  //create functionality of slider
+//Coded March 2020
+//removed pseudocoding for more streamlined look and added descriptors to steps and functions within code - ie, steps within createLegend in a comment above function definition
 
-
-//I used .setView to center my map on a specific location when it first loads.
+//my global scope variables
 var mymap;
 var minValue;
 var atts = [];
@@ -34,7 +22,7 @@ function createMap(){
 
 	getData();
 };
-
+//we need a legend - create the container, add the text that updates with the sequencing, add the circle svgs.
 function createLegend(map, attributes){
     var LegendControl = L.Control.extend({
         options: {
@@ -42,39 +30,32 @@ function createLegend(map, attributes){
         },
 
         onAdd: function (mymap) {
-            // create the control container with a particular class name
+            //create and name the container
             var container = L.DomUtil.create('div', 'legend-control-container');
-
-            //PUT YOUR SCRIPT TO CREATE THE TEMPORAL LEGEND HERE
-            //console.log(attributes)
             $(container).append("<p id='legend'><b>Population in:</b> 2010</p>")
-            //L.DomEvent.disableClickPropagation(container);
-            console.log('creating svg')
+            L.DomEvent.disableClickPropagation(container);
+
             $(container).append('<div id = "temporal-legend">')
             var svg = '<svg id="att-legend" width="180px" height = "80px">';
             var circles = ["max", "mean", "min"];
             for (var i=0; i<circles.length; i++){
-              console.log(circles[i])
-              console.log(data_stats[circles[i]]);
               var rad = calcPropRadius(data_stats[circles[i]]);
-              //console.log(rad)
-              var cx=30
               var cy=59-rad;
               svg+=svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + rad + '"cy="' + cy + '" fill="#986BF0" fill-opacity="0.6" stroke="#000000" cx="30"/>';
               var textY = i * 20 + 20;
               svg += '<text id="' + circles[i] + '-text" x="65" y="' + textY + '">' + Math.round(data_stats[circles[i]]*100)/100 + " people" + '</text>';
             };
             svg+= '</svg>';
-            //console.log(svg)
+
             $(container).append(svg);
-            console.log('svg in container')
+
             return container;
         }
     });
+    //add to the map
     mymap.addControl(new LegendControl());
-    updatePropSymbols(mymap, attributes);
 };
-
+//create popups using the object oriented programming
 function PopupContent(properties, attribute){
   var statename = "NAME"
   this.properties = properties
@@ -83,7 +64,7 @@ function PopupContent(properties, attribute){
   this.population = this.properties[attribute]
   this.formatted = "<p><b>State:</b> " + this.properties[statename] + "</p><p><b>Population in " + this.year + ": </b>" + this.population + " people</p>";
 }
-
+//here is where we get our data from the geojson - we also call functions to process data, calculate min, max, and mean, create the first round of prop symbols, create the sequence controls (slider, steps), and create the legend
 function getData(){
     //load the data
     $.getJSON("data/Change_Pop.geojson", function(response){
@@ -94,7 +75,7 @@ function getData(){
       createLegend(mymap, atts);
     });
 }
-
+//the data has to look a certain way to be properly used in other functions, so we process it with this function
 function processData(data){
   var props = data.features[0].properties;
   for (var att in props) {
@@ -102,11 +83,10 @@ function processData(data){
       atts.push(att);
     };
   };
-  console.log(atts);
   return atts;
 };
 
-//find the minimum value so that we know how to base our prop symbol radii
+//find the min, max, and mean values so that we know how to base our prop symbol radii
 function calcStats(data){
   var allValues = [];
   for (var state of data.features){
@@ -130,12 +110,10 @@ function calcPropRadius(attValue){
   var minRadius = 2;
 
   var radius = 1.0083*Math.pow(attValue/data_stats.min,0.5715)*minRadius
-  //console.log(minValue)
   return radius
 }
 
-//My functions based on lab examples
-//build our proportional symbols in a function separate from getData.
+//point to layer will create our build our symbols and tie them and the pop ups to the map
 function pointToLayer(feature, latlng){
   var attribute = atts[index];
   //console.log(attribute)
@@ -150,58 +128,41 @@ function pointToLayer(feature, latlng){
   var popupContent = new PopupContent(feature.properties, attribute)
   var statename = "NAME"
   var attValue = Number(feature.properties[attribute]);
-  //console.log(attValue)
   options.radius = calcPropRadius(attValue);
   var layer = L.circleMarker(latlng, options);
-  //console.log(feature.properties.State)
   var year = attribute.split('_')[1];
-
   layer.bindPopup(popupContent.formatted, {
     offset: new L.Point(0,-options.radius)
   });
-  //console.log("i hate this lab");
-  //console.log(layer)
   return layer;
 };
-
+//create the proportional symbols
 function createPropSymbols(data, atts){
-  //console.log("This function works")
   L.geoJson(data, {
     pointToLayer: function(feature, latlng){
-      //console.log('ahhhhh')
-      //console.log(atts[index])
       return pointToLayer(feature, latlng, atts);
-      //createLegend(attribute)
     }
   }).addTo(mymap);
 };
 
-//pseudocode for sequencing
-//create slider
-//add buttons
-//build array to keep track of order
-//assign attribute based on the index of array
-//event listeners
-//build wrap around
-//update slider position based on index
-//resize symbols
-
+//structure is very similar to creating the legend
 function sequence_controls(atts){
   var SequenceControl = L.Control.extend({
     options: {
       position: 'bottomleft'
     },
-
+    //build the physical containers and fill it
     onAdd: function(){
       var container = L.DomUtil.create('div', 'sequence-control-container')
       $(container).append('<input class="range-slider" type="range">');
       $(container).append('<button class="step" id="reverse" title="Reverse">Reverse</button>');
       $(container).append('<button class="step" id="forward" title="Forward">Forward</button>');
-
+      //no clicks
       L.DomEvent.disableClickPropagation(container);
       return container
     }
     })
+    //add the map and style
     mymap.addControl(new SequenceControl());
     $('.range-slider').attr({
       max: 9,
@@ -213,7 +174,6 @@ function sequence_controls(atts){
     $('#forward').html('<img src="img/forward.png">');
     $('.step').click(function(){
       var index = $('.range-slider').val();
-      //console.log(index)
       if ($(this).attr('id') == 'forward'){
         index++
         index = index > 9 ? 0:index;
@@ -227,13 +187,12 @@ function sequence_controls(atts){
     });
     $('.range-slider').on('input', function(){
       var index = $(this).val();
-      //return index
-      //console.log('got index')
       attribute = atts[index]
       updatePropSymbols(atts[index]);
     });
   }
 
+//update symbols with slider/step movement
 function updatePropSymbols(atts){
   mymap.eachLayer(function(layer){
     if (layer.feature && layer.feature.properties[atts]){
@@ -250,5 +209,5 @@ function updatePropSymbols(atts){
 });
 };
 
-//.ready will execute the function it requires once the document has all the data it needs.
+//make the map!!!!
 $(document).ready(createMap);
