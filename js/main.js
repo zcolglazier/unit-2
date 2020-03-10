@@ -55,6 +55,7 @@ function createLegend(map, attributes){
     //add to the map
     mymap.addControl(new LegendControl());
 };
+
 //create popups using the object oriented programming
 function PopupContent(properties, attribute){
   var statename = "NAME"
@@ -73,7 +74,6 @@ function getData(){
       createPropSymbols(response, atts);
       sequence_controls(atts);
       createLegend(mymap, atts);
-    });
 }
 //the data has to look a certain way to be properly used in other functions, so we process it with this function
 function processData(data){
