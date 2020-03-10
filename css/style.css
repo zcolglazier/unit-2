@@ -5,6 +5,11 @@
 #body {
   background-color: rgba(255,255,255,0.8);
 }
+#frame {
+  height:400px;
+  width: 100%;
+  color: purple;
+}
 #map {
   height: 400px;
   width: 100%;
@@ -14,7 +19,7 @@
 .sequence-control-container{
   width: 300px;
   height: 30px;
-  background-color: rgba(255,255,255,0.8);
+  background-color: ivory;
   padding: 10px;
   line-height: 45px;
   text-align: center;
@@ -32,12 +37,14 @@
 }
 
 #panel {
-  width: 25%;
-  padding: 20px;
+  width: 90%;
+  padding: 10px;
   display: inline-block;
   vertical-align: top;
-  text-align: center;
-  line-height: 42px;
+  text-align: left;
+  line-height: 30px;
+  font-family: Georgia;
+  color: purple;
 }
 
 .range-slider {
