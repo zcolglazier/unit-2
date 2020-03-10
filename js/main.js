@@ -35,43 +35,44 @@ function createMap(){
 	getData();
 };
 
-function createLegend(){
+function createLegend(map, attributes){
     var LegendControl = L.Control.extend({
         options: {
             position: 'bottomright'
         },
 
-        onAdd: function () {
+        onAdd: function (mymap) {
             // create the control container with a particular class name
             var container = L.DomUtil.create('div', 'legend-control-container');
 
             //PUT YOUR SCRIPT TO CREATE THE TEMPORAL LEGEND HERE
             //console.log(attributes)
             $(container).append("<p id='legend'><b>Population in:</b> 2010</p>")
-            L.DomEvent.disableClickPropagation(container);
+            //L.DomEvent.disableClickPropagation(container);
             console.log('creating svg')
-            var svg = '<svg id="att-legend" width="130px" height = "130px"';
+            $(container).append('<div id = "temporal-legend">')
+            var svg = '<svg id="att-legend" width="180px" height = "80px">';
             var circles = ["max", "mean", "min"];
             for (var i=0; i<circles.length; i++){
-              //console.log(circles[i])
-              //console.log(data_stats[circles[i]]);
+              console.log(circles[i])
+              console.log(data_stats[circles[i]]);
               var rad = calcPropRadius(data_stats[circles[i]]);
               //console.log(rad)
               var cx=30
               var cy=59-rad;
-              svg+=svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + rad + '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="30"/>';
+              svg+=svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + rad + '"cy="' + cy + '" fill="#986BF0" fill-opacity="0.6" stroke="#000000" cx="30"/>';
               var textY = i * 20 + 20;
-              svg += '<text id="' + circles[i] + '-text" x="65" y="' + textY + '">' + Math.round(data_stats[circles[i]]*100)/100 + " million" + '</text>';
+              svg += '<text id="' + circles[i] + '-text" x="65" y="' + textY + '">' + Math.round(data_stats[circles[i]]*100)/100 + " people" + '</text>';
             };
             svg+= '</svg>';
             //console.log(svg)
             $(container).append(svg);
-            //console.log('svg in container')
+            console.log('svg in container')
             return container;
         }
     });
-
     mymap.addControl(new LegendControl());
+    updatePropSymbols(mymap, attributes);
 };
 
 function PopupContent(properties, attribute){
@@ -90,7 +91,7 @@ function getData(){
       calcStats(response);
       createPropSymbols(response, atts);
       sequence_controls(atts);
-      createLegend();
+      createLegend(mymap, atts);
     });
 }
 
@@ -116,8 +117,8 @@ function calcStats(data){
     }
   }
   //console.log(allValues)
-  data_stats.min = Math.min(...allValues)
-  data_stats.max = Math.max(...allValues)
+  data_stats.min = Math.min(...allValues);
+  data_stats.max = Math.max(...allValues);
   var sum = allValues.reduce(function(a,b){return a+b});
   data_stats.mean = sum/allValues.length;
   //console.log(minValue)
@@ -154,10 +155,6 @@ function pointToLayer(feature, latlng){
   var layer = L.circleMarker(latlng, options);
   //console.log(feature.properties.State)
   var year = attribute.split('_')[1];
-  //console.log(year)
-  // var popupContent = "<p><b>State: </b> " + feature.properties[statename];
-  //console.log(popupContent)
-  // popupContent += "<p><b>Population in " + year + ":</b> " + feature.properties[attribute] + " people</p>";
 
   layer.bindPopup(popupContent.formatted, {
     offset: new L.Point(0,-options.radius)
@@ -198,10 +195,9 @@ function sequence_controls(atts){
     onAdd: function(){
       var container = L.DomUtil.create('div', 'sequence-control-container')
       $(container).append('<input class="range-slider" type="range">');
-      $(container).append('<button class="step" id="reverse">R</button>');
-      $(container).append('<button class="step" id="forward">F</button>');
-      $('#reverse').html('<img src="img/reverse.png">');
-      $('#forward').html('<img src="img/forward.png">');
+      $(container).append('<button class="step" id="reverse" title="Reverse">Reverse</button>');
+      $(container).append('<button class="step" id="forward" title="Forward">Forward</button>');
+
       L.DomEvent.disableClickPropagation(container);
       return container
     }
@@ -213,7 +209,8 @@ function sequence_controls(atts){
       value: 0,
       step: 1
     });
-
+    $('#reverse').html('<img src="img/reverse.png">');
+    $('#forward').html('<img src="img/forward.png">');
     $('.step').click(function(){
       var index = $('.range-slider').val();
       //console.log(index)

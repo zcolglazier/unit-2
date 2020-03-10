@@ -1,9 +1,9 @@
 #title {
-  font-family: Georgia,
-  color:"#986BF0"
+  font-family: Georgia;
+  color: purple;
 }
 #body {
-  background-color: rgba(255,255,255,0.8)
+  background-color: rgba(255,255,255,0.8);
 }
 #map {
   height: 400px;
@@ -22,11 +22,11 @@
 }
 
 .legend-control-container{
-  width: 160px;
-  height: 60px;
+  width: 200px;
+  height: 100px;
   background-color: rgba(255,255,255,0.8);
-  padding: 8px;
-  line-height: 10px;
+  padding: 2px;
+  line-height: 2px;
   text-align: center;
   border: solid gray 1px;
 }
@@ -49,7 +49,7 @@
 }
 
 .step img{
-  width: 100%
+  width: 100%;
 }
 
 #forward {
