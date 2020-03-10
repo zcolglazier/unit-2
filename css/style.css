@@ -1,9 +1,10 @@
 #title {
   font-family: Georgia;
   color: purple;
+  text-align: center;
 }
 #body {
-  background-color: rgba(255,255,255,0.8);
+  background-color: ghostwhite;
 }
 #frame {
   height:400px;
@@ -19,7 +20,7 @@
 .sequence-control-container{
   width: 300px;
   height: 30px;
-  background-color: ivory;
+  background-color: rgba(255,255,255,0.8);
   padding: 10px;
   line-height: 45px;
   text-align: center;
