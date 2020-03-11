@@ -208,6 +208,5 @@ function updatePropSymbols(atts){
   };
 });
 };
-
 //make the map!!!!
 $(document).ready(createMap);
