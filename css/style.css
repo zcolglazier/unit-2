@@ -6,11 +6,6 @@
 #body {
   background-color: ghostwhite;
 }
-#frame {
-  height:400px;
-  width: 100%;
-  color: purple;
-}
 #map {
   height: 400px;
   width: 100%;
@@ -38,7 +33,7 @@
 }
 
 #panel {
-  width: 90%;
+  width: 95%;
   padding: 10px;
   display: inline-block;
   vertical-align: top;
