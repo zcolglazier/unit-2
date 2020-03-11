@@ -74,7 +74,7 @@ function getData(){
       createPropSymbols(response, atts);
       sequence_controls(atts);
       createLegend(mymap, atts);
-}
+})
 //the data has to look a certain way to be properly used in other functions, so we process it with this function
 function processData(data){
   var props = data.features[0].properties;
