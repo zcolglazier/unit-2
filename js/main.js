@@ -75,6 +75,7 @@ function getData(){
       sequence_controls(atts);
       createLegend(mymap, atts);
 })
+};
 //the data has to look a certain way to be properly used in other functions, so we process it with this function
 function processData(data){
   var props = data.features[0].properties;
@@ -190,7 +191,7 @@ function sequence_controls(atts){
       attribute = atts[index]
       updatePropSymbols(atts[index]);
     });
-  }
+};
 
 //update symbols with slider/step movement
 function updatePropSymbols(atts){
@@ -206,7 +207,7 @@ function updatePropSymbols(atts){
       //console.log('ready to update legend')
       $("#legend").html("<b>Population in: </b>"+ popupContent.year)
   };
-});
-};
+  });
+  };
 //make the map!!!!
 $(document).ready(createMap);
